@@ -1,0 +1,42 @@
+version: '2'
+services:
+  server:
+    build:
+      context: ./server/
+    # command: nodemon ./bin/www
+    volumes:
+      - ./server/:/usr/app
+      - /usr/app/node_modules
+    ports:
+      - '8080:8080'
+    links:
+      - mongodb
+    # env_file: ./server/.env # TODO - uncomment this to auto-load your .env file!
+    environment:
+      - DATABASE=mongodb://mongo:27017/cim
+      - CHOKIDAR_USEPOLLING=true
+      - NODE_ENV=development
+      - PORT=8080
+  client:
+    build:
+      context: ./client/
+    command: npm start
+    volumes:
+      - ./client/:/usr/app
+      - /usr/app/node_modules
+    depends_on:
+      - server
+    ports:
+      - '3001:3000'
+  mongodb:
+    image: mongo
+    container_name: 'mongo'
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - 27017:27017
+    command: mongod --smallfiles --logpath=/dev/null # --quiet
+
