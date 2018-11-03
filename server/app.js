@@ -11,7 +11,7 @@ const { notFound, catchAll } = require('./error');
 
 mongoose.connect(
   config.DATABASE,
-  { useNewUrlParser: true },
+  { useNewUrlParser: true, useFindAndModify: false },
 );
 mongoose.Promise = global.Promise;
 

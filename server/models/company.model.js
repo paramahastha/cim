@@ -14,7 +14,11 @@ const CompanySchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    phone: {
+    phone_code: {
+      type: Number,
+      required: true,
+    },
+    phone_number: {
       type: Number,
       required: true,
     },

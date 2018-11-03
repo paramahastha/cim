@@ -7,11 +7,11 @@ const OfficeSchema = new mongoose.Schema(
       required: true,
     },
     latitude: {
-      type: String,
+      type: Number,
       required: true,
     },
     longitude: {
-      type: String,
+      type: Number,
       required: true,
     },
     office_start_date: {

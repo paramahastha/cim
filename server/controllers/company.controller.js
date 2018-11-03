@@ -1,4 +1,5 @@
 const Company = require('../models/company.model');
+const Office = require('../models/office.model');
 
 module.exports.check = async (req, res, next) => {
   const company = await Company.findById(req.params.id);
@@ -41,7 +42,9 @@ module.exports.update = async (req, res) => {
 };
 
 module.exports.view = async (req, res) => {
-  const company = await Company.findById(req.params.id);
-
-  res.json(company);
+  Company.findById(req.params.id).then(company => {
+    Office.find({ company: company._id }).then(offices => {
+      res.json({ company, ...{ offices: offices } });
+    });
+  });
 };
