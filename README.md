@@ -5,7 +5,11 @@ A project that runs a Node server and a create-react-app app via two separate co
 ## How to run
 
 ```
-docker-compose up
+docker-compose build -> docker-compose up
+
+or
+
+docker-compose up --build
 ```
 
 For development, the `server/` and `client/` directories have their own docker containers, which are configured via the `docker-compose.yml` file.
