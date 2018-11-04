@@ -1,7 +1,7 @@
 const initialState = {
   officeList: [],
   officeData: {},
-  notif: { title: '', message: '' },
+  notif: { title: '', message: '', level: '' },
 };
 
 export default (state = initialState, action = {}) => {

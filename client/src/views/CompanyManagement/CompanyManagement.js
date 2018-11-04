@@ -13,9 +13,11 @@ import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
+import Snackbar from '@material-ui/core/Snackbar';
 import MuiTextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
+import CloseIcon from '@material-ui/icons/Close';
 import RemoveCircleOutline from '@material-ui/icons/RemoveCircleOutline';
 import { Field, Form, Formik } from 'formik';
 import { fieldToTextField, TextField } from 'formik-material-ui';
@@ -32,6 +34,7 @@ import {
 } from '../../actions/company';
 import { createOffice } from '../../actions/office';
 import Loader from '../../components/Loader/Loader';
+import MySnackbarContent from '../../components/MySnackbarContent/MySnackbarContent';
 import { countryCode } from '../../helpers/data/countryCode';
 
 const OfficeManagement = lazy(() =>
@@ -86,6 +89,9 @@ const styles = theme => ({
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing.unit,
+  },
+  btnClose: {
+    padding: theme.spacing.unit / 2,
   },
   btnCreate: {
     background: 'linear-gradient(45deg, #00a3cc 15%, #80e5ff 90%)',
@@ -143,11 +149,19 @@ class View extends Component {
                 </Typography>
               </Paper>
               <Formik
-                onSubmit={(values, { setSubmitting }) => {
+                onSubmit={(values, { setSubmitting, resetForm }) => {
                   setTimeout(() => {
                     setSubmitting(false);
                     this.props.createCompany(values).then(() => {
+                      this.props.toggleNotif();
                       this.props.listCompanies();
+                      resetForm({
+                        name: '',
+                        address: '',
+                        revenue: '',
+                        phone_code: '',
+                        phone_number: '',
+                      });
                     });
                   }, 500);
                 }}
@@ -276,10 +290,21 @@ class View extends Component {
                 </Typography>
               </Paper>
               <Formik
-                onSubmit={(values, { setSubmitting }) => {
+                onSubmit={(values, { setSubmitting, resetForm }) => {
                   setTimeout(() => {
                     setSubmitting(false);
-                    this.props.createOffice(values);
+                    this.props.createOffice(values).then(() => {
+                      resetForm({
+                        name: '',
+                        latitude: '',
+                        longitude: '',
+                        office_start_date: new Date(),
+                        company: '',
+                      });
+                      this.props.history.push(
+                        `/company/detail/${values.company}`,
+                      );
+                    });
                   }, 500);
                 }}
                 initialValues={{
@@ -447,7 +472,7 @@ class View extends Component {
                   <CardContent
                     className={classes.cardContent}
                     onClick={() =>
-                      this.props.history.push(`/company/office/${item._id}`)
+                      this.props.history.push(`/company/detail/${item._id}`)
                     }
                   >
                     <Typography color="textPrimary">Address :</Typography>
@@ -513,37 +538,79 @@ class View extends Component {
   }
 }
 
-const CompanyManagement = props => {
-  const { classes } = props;
-  return (
-    <React.Fragment>
-      <CssBaseline />
-      <main className={classes.layout}>
-        <Grid container direction="column">
-          <Paper className={classes.paper}>
-            <Switch>
-              <Route
-                exact
-                path="/company"
-                name="Company"
-                render={() => <View {...props} />}
-              />
-              <Route
-                path="/company/office/:id"
-                name="Company's Office"
-                render={() => (
-                  <Suspense fallback={<Loader />}>
-                    <OfficeManagement />
-                  </Suspense>
-                )}
-              />
-            </Switch>
-          </Paper>
-        </Grid>
-      </main>
-    </React.Fragment>
-  );
-};
+class CompanyManagement extends Component {
+  state = {
+    notif: false,
+  };
+
+  toggleNotif = () => {
+    this.setState({ notif: !this.state.notif });
+  };
+
+  render() {
+    const { classes } = this.props;
+    return (
+      <React.Fragment>
+        <CssBaseline />
+        <main className={classes.layout}>
+          <Grid container direction="column">
+            <Paper className={classes.paper}>
+              <Switch>
+                <Route
+                  exact
+                  path="/company"
+                  name="Company"
+                  render={() => (
+                    <View
+                      {...this.props}
+                      {...this.state}
+                      toggleNotif={this.toggleNotif}
+                    />
+                  )}
+                />
+                <Route
+                  path="/company/detail/:id"
+                  name="Company Detail"
+                  render={() => (
+                    <Suspense fallback={<Loader />}>
+                      <OfficeManagement />
+                    </Suspense>
+                  )}
+                />
+              </Switch>
+            </Paper>
+          </Grid>
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={this.state.notif}
+            autoHideDuration={3000}
+            onClose={this.toggleNotif}
+            action={[
+              <IconButton
+                key="close"
+                aria-label="Close"
+                color="inherit"
+                className={classes.btnClose}
+                onClick={this.toggleNotif}
+              >
+                <CloseIcon />
+              </IconButton>,
+            ]}
+          >
+            <MySnackbarContent
+              onClose={this.toggleNotif}
+              variant={this.props.company.notif.level}
+              message={this.props.company.notif.message}
+            />
+          </Snackbar>
+        </main>
+      </React.Fragment>
+    );
+  }
+}
 
 const mapStateToProps = state => {
   return {

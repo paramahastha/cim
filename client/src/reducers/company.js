@@ -1,7 +1,7 @@
 const initialState = {
   companyList: [],
   companyData: { company: {}, offices: [] },
-  notif: { title: '', message: '' },
+  notif: { title: '', message: '', level: '' },
 };
 
 export default (state = initialState, action = {}) => {

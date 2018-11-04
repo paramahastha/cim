@@ -56,6 +56,7 @@ export const createOffice = data => dispatch => {
         createOfficeSuccess({
           title: 'Office',
           message: 'Create Office Successfully',
+          level: 'success',
         }),
       ),
     )
@@ -64,6 +65,7 @@ export const createOffice = data => dispatch => {
       createOfficeFailure({
         title: 'Office',
         message: err.response.data.message,
+        level: 'error',
       }),
     );
 };
@@ -85,6 +87,7 @@ export const removeOffice = id => dispatch => {
         removeOfficeSuccess({
           title: 'Office',
           message: 'Remove Office Successfully',
+          level: 'success',
         }),
       ),
     )
@@ -93,6 +96,7 @@ export const removeOffice = id => dispatch => {
       removeOfficeFailure({
         title: 'Office',
         message: err.response.data.message,
+        level: 'error',
       }),
     );
 };

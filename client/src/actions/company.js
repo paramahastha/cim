@@ -56,6 +56,7 @@ export const createCompany = data => dispatch => {
         createCompanySuccess({
           title: 'Company',
           message: 'Create Company Successfully',
+          level: 'success',
         }),
       ),
     )
@@ -64,6 +65,7 @@ export const createCompany = data => dispatch => {
       createCompanyFailure({
         title: 'Company',
         message: err.response.data.message,
+        level: 'error',
       }),
     );
 };
@@ -85,6 +87,7 @@ export const removeCompany = id => dispatch => {
         removeCompanySuccess({
           title: 'Company',
           message: 'Remove Company Successfully',
+          level: 'success',
         }),
       ),
     )
@@ -93,6 +96,7 @@ export const removeCompany = id => dispatch => {
       removeCompanyFailure({
         title: 'Company',
         message: err.response.data.message,
+        level: 'error',
       }),
     );
 };

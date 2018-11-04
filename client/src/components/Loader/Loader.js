@@ -7,7 +7,7 @@ const Loader = props => {
     <React.Fragment>
       <CssBaseline />
       <main className="loader-layout">
-        <CircularProgress color="secondary" />
+        <CircularProgress color="primary" />
       </main>
     </React.Fragment>
   );
