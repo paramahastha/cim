@@ -3,3 +3,7 @@
 
 # production
 /dist
+
+# locks
+package-lock.json
+yarn.lock

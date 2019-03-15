@@ -6,3 +6,7 @@
 
 # production
 /build
+
+# locks
+package-lock.json
+yarn.lock
