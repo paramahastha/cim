@@ -5,7 +5,7 @@ A project that runs a Node server and a create-react-app app via two separate co
 ## How to run
 
 ```
-run yarn install in client & server directory
+run npm/yarn install in client & server directory
 
 docker-compose build -> docker-compose up
 
